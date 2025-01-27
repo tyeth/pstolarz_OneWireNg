@@ -187,6 +187,21 @@ public:
 #endif
     }
 
+    ~OneWireNg_PicoRP2040PIO() {
+        pio_remove_program(_pio, &w1_reset_program, _addrs[RESET_STD]);
+        pio_remove_program(_pio, &w1_touch0_program, _addrs[TOUCH0_STD]);
+        pio_remove_program(_pio, &w1_touch1_program, _addrs[TOUCH1_STD]);
+#if CONFIG_OVERDRIVE_ENABLED
+        pio_remove_program(_pio, &w1_reset_program, _addrs[RESET_OD]);
+        pio_remove_program(_pio, &w1_touch0_program, _addrs[TOUCH0_OD]);
+        pio_remove_program(_pio, &w1_touch1_program, _addrs[TOUCH1_OD]);
+#endif
+        pio_sm_unclaim(_pio, _sm1);
+#if CONFIG_RP2040_PIOSM_NUM_USED > 1
+        pio_sm_unclaim(_pio, _sm2);
+#endif
+    }
+
     /**
      * Transmit reset cycle on the 1-wire bus.
      */
